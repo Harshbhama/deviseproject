@@ -1,5 +1,7 @@
   <strong>User:</strong>
    <%= @post.user_id %>
+   <br>
+   Post content----- <%= @post.content %>
  </p>
 <div>
 	<% if user_signed_in? %>
@@ -14,12 +16,34 @@
 	<% end %>
 	<% end %>
 </div>
+<%= form_for @like do |f| %>
+<%= f.hidden_field :post_id, value: @post.id %>
+<%= f.hidden_field :like, value: 'YES' %>
+	<%= f.submit %>
+	<% end %>
 <ul>
+	<% y = @post.id %>
+	<% b = Post.find(y) %>
+	<% z = b.likes %>
+Number of likes-----	<%= z.count %>
+	<% a =@post.id %>
+	<% c = Comment.where(post_id: a)%>
+	<br>
+	Total comment counts ---<%= c.count %>
 	<% @post.comments.reverse.each do |comment| %>
-	<li><%= comment.content %></li>
+	<% abc = comment.user_id %>
+	<% xyz = User.find(abc) %>
+	<li><%= comment.content %> 
+		----<%= xyz.email %> </li>
+		<% if user_signed_in? %>
+		<% if current_user.id == comment.user_id %>
 	<%= link_to 'Delete-Comment', delete_comments_path(comment.id),  method: :delete %>
+	<% end %>
+	<% end %>
 
 	<% end %>
+	
+	
 </ul>
 
 <% if user_signed_in? && current_user.id == @post.user_id %>
